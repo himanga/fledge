@@ -23,7 +23,7 @@ def get_plugin_info(name, dir):
         if arg2 is None:
             raise ValueError('The plugin {} does not exist'.format(name))
         cmd_with_args = [arg1, arg2, "plugin_info"]
-        p = subprocess.Popen(cmd_with_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.Popen(cmd_with_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True)
         out, err = p.communicate()
         res = out.decode("utf-8")
         jdoc = json.loads(res)
