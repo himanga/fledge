@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
   openlog(argv[0], LOG_PID|LOG_CONS, LOG_USER);
   setlogmask(LOG_UPTO(LOG_WARNING));
 
-  if ((hndl = dlopen(argv[1], RTLD_GLOBAL|RTLD_LAZY)) != NULL)
+  if ((hndl = dlopen(argv[1], RTLD_LAZY)) != NULL)
   {
     func_t infoEntry = (func_t)dlsym(hndl, argv[2]);
     if (infoEntry == NULL)
