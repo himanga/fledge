@@ -58,6 +58,7 @@ int main(int argc, char *argv[])
     }
     PLUGIN_INFORMATION *info = (PLUGIN_INFORMATION *)(*infoEntry)();
     printf("{\"name\": \"%s\", \"version\": \"%s\", \"type\": \"%s\", \"interface\": \"%s\", \"flag\": %d, \"config\": %s}\n", info->name, info->version, info->type, info->interface, info->options, info->config);
+    dlclose(hndl);
   }
   else
   {
