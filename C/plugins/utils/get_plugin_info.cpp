@@ -53,12 +53,14 @@ int main(int argc, char *argv[])
       // Unable to find plugin_info entry point
       fprintf(stderr, "Plugin library %s does not support %s function : %s\n", argv[1], argv[2], dlerror());
       dlclose(hndl);
+      hndl = NULL;
       closelog();
       exit(3);
     }
     PLUGIN_INFORMATION *info = (PLUGIN_INFORMATION *)(*infoEntry)();
     printf("{\"name\": \"%s\", \"version\": \"%s\", \"type\": \"%s\", \"interface\": \"%s\", \"flag\": %d, \"config\": %s}\n", info->name, info->version, info->type, info->interface, info->options, info->config);
     dlclose(hndl);
+    hndl = NULL;
   }
   else
   {
