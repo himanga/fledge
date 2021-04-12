@@ -22,7 +22,6 @@ _plugin = None
 _LOGGER.debug("Loading shim layer for python plugin '{}', type 'filter' ".format(sys.argv[1]))
 
 def _plugin_obj():
-    global _plugin
     plugin = sys.argv[1]
     plugin_type = "filter"
     plugin_module_path = "{}/python/fledge/plugins/filter/{}".format(_FLEDGE_ROOT, plugin)

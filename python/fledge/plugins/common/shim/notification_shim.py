@@ -22,7 +22,6 @@ _plugin = None
 _LOGGER.info("Loading shim layer for python plugin '{}', type '{}' ".format(sys.argv[1], sys.argv[2]))
 
 def _plugin_obj():
-    global _plugin
     plugin = sys.argv[1]
     plugin_type = sys.argv[2]
     plugin_module_path = "{}/python/fledge/plugins/{}/{}".format(_FLEDGE_ROOT, plugin_type, plugin)
@@ -32,44 +31,36 @@ def _plugin_obj():
 _plugin = _plugin_obj()
 
 def plugin_info():
-    global _plugin
     handle = _plugin.plugin_info()
     handle['config'] = json.dumps(handle['config'])
     return handle
 
 def plugin_init(config):
-    global _plugin
     handle = _plugin.plugin_init(json.loads(config))
     # TODO: FOGL-1827 - Config item value must be respected as per type given
     revised_handle = _revised_config_for_json_item(handle)
     return revised_handle
 
 def plugin_reason(handle):
-    global _plugin
     return json.dumps(_plugin.plugin_reason(handle))
 
 def plugin_eval(handle, data):
-    global _plugin
     # data is a C string
     return _plugin.plugin_eval(handle, data)
 
 def plugin_triggers(handle):
-    global _plugin
     return json.dumps(_plugin.plugin_triggers(handle))
 
 def plugin_deliver(handle, deliveryName, notificationName, triggerReason, customMessage):
-    global _plugin
     return _plugin.plugin_deliver(handle, deliveryName, notificationName, triggerReason, customMessage)
 
 def plugin_reconfigure(handle, new_config):
-    global _plugin
     new_handle = _plugin.plugin_reconfigure(handle, json.loads(new_config))
     # TODO: FOGL-1827 - Config item value must be respected as per type given
     revised_handle = _revised_config_for_json_item(new_handle)
     return revised_handle
 
 def plugin_shutdown(handle):
-    global _plugin
     return _plugin.plugin_shutdown(handle)
 
 def _revised_config_for_json_item(config):
