@@ -36,7 +36,7 @@ SouthPythonPluginHandle::SouthPythonPluginHandle(const char *pluginName,
 	//same dir as where lib-services-common.so is present
 	string libPath = PYTHON_PLUGIN_INTF_LIB;
 	
-	m_hndl = dlopen(libPath.c_str(), RTLD_NOW | RTLD_GLOBAL);
+	m_hndl = dlopen(libPath.c_str(), RTLD_LAZY);
 	if (!m_hndl)
 	{
 		Logger::getLogger()->error("PythonPluginHandle c'tor: dlopen failed for library '%s' : %s",

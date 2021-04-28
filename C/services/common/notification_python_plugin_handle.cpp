@@ -34,7 +34,7 @@ NotificationPythonPluginHandle::NotificationPythonPluginHandle(const char *plugi
 	m_interfaceObjName = PYTHON_PLUGIN_INTF_LIB;
 
 	// Open interface library object
-	m_hndl = dlopen(m_interfaceObjName.c_str(), RTLD_NOW | RTLD_GLOBAL);
+	m_hndl = dlopen(m_interfaceObjName.c_str(), RTLD_LAZY);
 	if (!m_hndl)
 	{
 		Logger::getLogger()->error("NotificationPythonPluginHandle c'tor: dlopen failed for library '%s' : %s",

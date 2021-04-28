@@ -34,7 +34,7 @@ FilterPythonPluginHandle::FilterPythonPluginHandle(const char *pluginName,
 	m_interfaceObjName = PYTHON_PLUGIN_INTF_LIB;
 
 	// Open interfacxe library object
-	m_hndl = dlopen(m_interfaceObjName.c_str(), RTLD_NOW | RTLD_GLOBAL);
+	m_hndl = dlopen(m_interfaceObjName.c_str(), RTLD_LAZY);
 	if (!m_hndl)
 	{
 		Logger::getLogger()->error("FilterPythonPluginHandle c'tor: dlopen failed for library '%s' : %s",
