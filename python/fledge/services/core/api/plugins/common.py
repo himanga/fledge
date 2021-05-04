@@ -14,6 +14,7 @@ import importlib.util
 from typing import Dict
 from datetime import datetime
 from functools import lru_cache
+import time
 
 from fledge.common import logger
 from fledge.common.common import _FLEDGE_ROOT, _FLEDGE_DATA, _FLEDGE_PLUGIN_PATH
@@ -47,7 +48,7 @@ def load_python_plugin(plugin_module_path: str, plugin: str, _type: str) -> Dict
                         plugin_module_path, plugin))
                     _plugin = importlib.util.module_from_spec(spec)
                     spec.loader.exec_module(_plugin)
-
+    time.sleep(1)
     return _plugin
 
 
