@@ -148,6 +148,8 @@ string responsePayload;
  */
 void ManagementApi::shutdown(shared_ptr<HttpServer::Response> response, shared_ptr<HttpServer::Request> request)
 {
+// FIXME: remove this log
+m_logger->error("Management api shutdown CALLED...");
 ostringstream convert;
 string responsePayload;
 

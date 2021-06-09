@@ -7,6 +7,7 @@
 
 """Core server module"""
 
+import logging
 import asyncio
 import os
 import subprocess
@@ -53,7 +54,8 @@ __copyright__ = "Copyright (c) 2017-2018 OSIsoft, LLC"
 __license__ = "Apache 2.0"
 __version__ = "${VERSION}"
 
-_logger = logger.setup(__name__, level=20)
+# FIXME: change level to INFO
+_logger = logger.setup(__name__, level=logging.DEBUG)
 
 # FLEDGE_ROOT env variable
 _FLEDGE_DATA = os.getenv("FLEDGE_DATA", default=None)
@@ -1002,24 +1004,32 @@ class Server:
     async def _request_microservice_shutdown(cls, svc):
         """ request service's shutdown """
         management_api_url = 'http://{}:{}/fledge/service/shutdown'.format(svc._address, svc._management_port)
+        _logger.debug("_request_microservice_shutdown CALLED: {}".format(management_api_url))
         # TODO: need to set http / https based on service protocol
         headers = {'content-type': 'application/json'}
-        async with aiohttp.ClientSession() as session:
-            async with session.post(management_api_url, data=None, headers=headers) as resp:
-                result = await resp.text()
-                status_code = resp.status
-                if status_code in range(400, 500):
-                    _logger.error("Bad request error code: %d, reason: %s", status_code, resp.reason)
-                    raise web.HTTPBadRequest(reason=resp.reason)
-                if status_code in range(500, 600):
-                    _logger.error("Server error code: %d, reason: %s", status_code, resp.reason)
-                    raise web.HTTPInternalServerError(reason=resp.reason)
-                try:
-                    response = json.loads(result)
-                    response['message']
-                    _logger.info("Shutdown scheduled for %s service %s. %s", svc._type, svc._name, response['message'])
-                except KeyError:
-                    raise
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.post(management_api_url, data=None, headers=headers) as resp:
+                    result = await resp.text()
+                    status_code = resp.status
+                    if status_code in range(400, 500):
+                        _logger.error("Bad request error code: %d, reason: %s", status_code, resp.reason)
+                        raise web.HTTPBadRequest(reason=resp.reason)
+                    if status_code in range(500, 600):
+                        _logger.error("Server error code: %d, reason: %s", status_code, resp.reason)
+                        raise web.HTTPInternalServerError(reason=resp.reason)
+                    try:
+                        response = json.loads(result)
+                        response['message']
+                        _logger.info("Shutdown scheduled for %s service %s. %s", svc._type, svc._name, response['message'])
+                    except KeyError:
+                        raise
+        except asyncio.TimeoutError as err:
+            _logger.error("On calling {}; asyncio timeout exception occurred {}".format(management_api_url, str(err)))
+        except Exception as exc:
+            _logger.exception("On calling {}; exception occurred {}".format(management_api_url, str(exc)))
+
+        _logger.debug("_request_microservice_shutdown END")
 
     @classmethod
     async def poll_microservices_unregister(cls):

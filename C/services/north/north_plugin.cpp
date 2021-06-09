@@ -159,8 +159,12 @@ void NorthPlugin::reconfigure(const string& newConfig)
  */
 void NorthPlugin::shutdown()
 {
+    // FIXME: remove log
+    Logger::getLogger()->error("NorthPlugin::shutdown CALLED...");
 	if (this->pluginShutdownPtr)
 	{
+	    // FIXME: remove log
+	    Logger::getLogger()->error("NorthPlugin::shutdown----- if pluginShutdownPtr, %s", m_instance);
 		try {
 			return this->pluginShutdownPtr(m_instance);
 		} catch (exception& e) {
@@ -173,7 +177,10 @@ void NorthPlugin::shutdown()
 				p ? p.__cxa_exception_type()->name() : "unknown exception");
 			throw;
 		}
-	}
+	}else {
+        // FIXME: remove log
+        Logger::getLogger()->error("NorthPlugin::shutdown----- if NO pluginShutdownPtr");
+    }
 }
 
 /**
